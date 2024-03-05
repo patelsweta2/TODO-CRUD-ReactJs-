@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [task, setTask] = useState("");
   const [selectedTodo, setSelectedTodo] = useState(null);
+
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem("todos"));
+    if (storedTodos && todos.length === 0) {
+      setTodos((prevTodos) => [...prevTodos, ...storedTodos]);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const addOrUpdateTodo = () => {
     if (selectedTodo) {
@@ -27,8 +38,10 @@ const Todo = () => {
   };
 
   const deleteTodo = (id) => {
+    console.log("Deleting todo with id:", id);
     const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
+    console.log("Updated Todos:", updatedTodos);
+    setTodos([...updatedTodos]);
     if (selectedTodo && selectedTodo.id === id) {
       setSelectedTodo(null);
     }
@@ -50,7 +63,7 @@ const Todo = () => {
             onClick={addOrUpdateTodo}
             className="p-2 bg-lime-700 text-white w-20 rounded text-base hover:bg-lime-500"
           >
-            Add
+            {selectedTodo ? "Update" : "Add"}
           </button>
         </div>
         <ul className="mt-6">
@@ -76,11 +89,6 @@ const Todo = () => {
                   </button>
                 </div>
               </div>
-              <style jsx>{`
-                li {
-                  max-width: 1200px;
-                }
-              `}</style>
             </li>
           ))}
         </ul>
