@@ -8,7 +8,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 p-4 fixed top-0 w-full z-10">
       <div className="container mx-auto flex items-center justify-between">
         <motion.div
           whileInView={{ x: [-100, 0], opacity: [0, 1] }}
